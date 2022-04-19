@@ -1,0 +1,75 @@
+<% layout('layouts/boilerplate') %> 
+
+<div class="row">
+    <h1 class = "text-center">Edit Bathroom</h1>
+    <div class = "col-md-6 offset-3">
+        <form action="/bathrooms/<%=bathrooms._id%>?_method=PUT" method = "POST" novalidate class="needs-validation" enctype = "multipart/form-data">
+            <div class = "mb-3">
+                <label class="form-label" for="name">Name</label>
+                <Input class="form-control" type = "text" id="name" name="bathroom[name]" value = "<%=bathrooms.name%>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class = "mb-3">
+                <label class="form-label" for="address">Address</label>
+                <Input class="form-control"  type = "text" id="name" name="bathroom[address]"value = "<%=bathrooms.address%>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class = "mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control"  type = "text" id="name" name="bathroom[description]"><%=bathrooms.description%></textarea>
+            </div>
+            <div class = "mb-3">
+                <label class="form-label" for="price">Price</label>
+                <div class="input-group">
+                    <span class="input-group-text" id = "price-label">$</span>
+                    <input type="text" class="form-control" id = "price" placeholder = "0" aria-label="Amount (to the nearest dollar)" name="bathroom[price]" value = "<%=bathrooms.price%>">
+                    <span class="input-group-text">.00</span>
+                </div>
+            </div>  
+            <div class = "mb-3">
+                <% for(let i = 0; i < bathrooms.images.length; i++){  %> 
+                    <img class = "img-thumbnail" src=<%=bathrooms.images[i].thumbnail%> alt="">  
+                    <div class="form-check-inline">
+                        <input type="checkbox" id = "image-<%=i%>" name ="deleteImages[]" value = "<%=bathrooms.images[i].filename%>">
+                    </div>
+                    <label for="image-<%=i%>">Delete?</label>              
+                <% } %> 
+            </div> 
+            <!-- <script type="text/javascript">
+                alert('test2')
+                // document.querySelectorAll('img').setAttribute('src', 'https://devsprouthosting.com/images/chicken.jpg')
+                document.getElementsByClassName('img-thumbnail').addEventListener('click',function(){
+                    console.log('test')
+                })
+                document.querySelectorAll('img').onclick = function(){
+                    console.log("You Clicked Me!")
+                }
+                alert('test')
+            </script> -->
+            <!-- <div class = "mb-3">
+                <label class="form-label" for="image">Add More Images</label>
+                <input type="file" name = "image", id="image" multiple>
+            </div> -->
+            <div class="mb-3">
+                <label for="formFileMultiple" class="form-label">Select Image(s) to Upload</label>
+                <input class="form-control" type="file" id="image" name = "image" multiple>
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-secondary col-12">Update Bathroom</button>
+            </div>
+        </form>
+        <form action="/bathrooms/<%=bathrooms._id%>?_method=DELETE" method = "POST" class ="mb-3">
+            <button class="btn btn-danger col-12">Delete Bathroom</button>
+        </form>
+        <a href="/bathrooms/<%=bathrooms._id%> ">Cancel</a>
+    </div>
+</div>
+
+
+
+
+

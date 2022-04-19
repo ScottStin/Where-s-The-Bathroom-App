@@ -1,0 +1,51 @@
+<% layout('layouts/boilerplate') %> 
+
+<div class="row">
+    <h1 class = "text-center">New Bathroom</h1>
+    <div class = "col-md-6 offset-md-3">
+        <form action="/bathrooms" method = "POST" novalidate class="needs-validation" enctype="multipart/form-data"> <!-- Novalidate is important for our error handling with required below. The 'needs-validation' class is what we select if the form is validated'. See boiler plate for more code related to this.-->
+            <div class = "mb-3">
+                <label class="form-label" for="name">Name</label>
+                <Input class="form-control" type = "text" id="name" name="bathroom[name]" required> <!-- required is important for our error handling-->
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class = "mb-3">
+                <label class="form-label" for="address">Address</label>
+                <Input class="form-control"  type = "text" id="name" name="bathroom[address]" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div>
+            <div class = "mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control"  type = "text" id="name" name="bathroom[description]"></textarea>
+            </div>
+            <div class = "mb-3">
+                <label class="form-label" for="price">Price</label>
+                <div class="input-group">
+                    <span class="input-group-text" id = "price-label">$</span>
+                    <input type="text" class="form-control" id = "price" placeholder = "0" aria-label="Amount (to the nearest dollar)" name="bathroom[price]">
+                    <span class="input-group-text">.00</span>
+                </div>
+            </div>    
+             <!-- <input type="file" name="image" id="image" multiple> -->
+            <div class="mb-3">
+                <label for="formFileMultiple" class="form-label">Select Image(s) to Upload</label>
+                <input class="form-control" type="file" id="image" name = "image" multiple>
+            </div>
+            <!-- <div class = "mb-3">
+                <label class="form-label" for="image">Image URL</label>
+                <Input class="form-control"  type = "text" id="image" name="bathroom[image]" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+            </div> -->
+            <div class="mb-3">
+                <button class="btn btn-dark col-12">Add Bathroom</button>
+            </div>
+        </form>
+        <a href="/bathrooms/">Cancel</a>
+    </div>
+</div>
