@@ -1,7 +1,129 @@
-
-<% layout('layouts/boilerplate') %> 
+<% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="/stylesheets/stars.css">
 <div id="map" style="width: 100%; height: 500px"></div> <br>
-<h1>Bathrooms Near You</h1>
+<div class="row mb-3">
+    <div class="col-11"><h1 class="inline">Bathrooms Near You</h1></div>
+    <div class="col-1 float-right"><button class="btn btn-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilters" aria-expanded="false" aria-controls="collapseExample">
+    Filters <i class="fa-solid fa-arrow-down-wide-short"></i>
+    </button></div>    
+</div>
+<form action="/bathrooms/filter" method="POST" novalidate class="needs-validation">
+    <div class="collapse" id="collapseFilters">
+        <div class="mb-3 card bg-light card-body">
+            <div class="row">            
+                <div class="col-2 text-center">
+                    <label for="services"><a href="#" class = "link-dark" data-bs-toggle="collapse" data-bs-target="#services" aria-expanded="false" aria-controls="collapseExample">Services</a></label>        
+                    <div class = "form-check collapse" id = "services">
+                        <% for(let i=0;i<services.length;i++){ %>
+                            <input class="form-check-input" type="checkbox" value="<%=services[i]%>" id="flexCheckDefault<%=i%>" name = "services"
+                                <%if(typeof serviceFilter!== 'undefined'){%>
+                                    <%if(serviceFilter.indexOf(services[i])!==-1){%>
+                                        checked
+                                    <%}%>
+                                <%}%>
+                            >
+                            <label class="form-check-label" for="flexCheckDefault<%=i%>">
+                                <%=services[i]%>
+                            </label> <br>
+                        <% } %>
+                    </div>
+                </div>              
+                <div class="col-2 text-center">
+                    <label for="hours"><a href="#" class = "link-dark" data-bs-toggle="collapse" data-bs-target="#hours" aria-expanded="false" aria-controls="collapseExample">Opening Hours</a></label>        
+                    <div class = "form-check collapse" id = "hours">                
+                            <input class="form-check-input" type="checkbox" value="now" id="flexCheckDefault1" name = "hours">
+                            <label class="form-check-label" for="flexCheckDefault1">
+                            Open now
+                            </label> <br>               
+                            <input class="form-check-input" type="checkbox" value="all" id="flexCheckDefault2" name = "hours">
+                            <label class="form-check-label" for="flexCheckDefault2">
+                            Open 24/7
+                            </label> <br>               
+                    </div>
+                </div>
+                <div class="col-2 text-center">
+                    <label for="rating"><a href="#" class = "link-dark" data-bs-toggle="collapse" data-bs-target="#rating" aria-expanded="false" aria-controls="collapseExample">User Rating</a></label>        
+                    <div class = "form-check collapse" id = "rating">                
+                            <input class="form-check-input" type="radio" value=4.5 id="flexCheckDefault45" name = "rating">
+                            <label class="form-check-label" for="flexCheckDefault45">
+                            Greater than 4.5 &#9733;'s
+                            </label> <br>               
+                            <input class="form-check-input" type="radio" value=4 id="flexCheckDefault4" name = "rating">
+                            <label class="form-check-label" for="flexCheckDefault4">
+                            Greater than four &#9733;'s
+                            </label> <br>               
+                            <input class="form-check-input" type="radio" value=3 id="flexCheckDefault3" name = "rating">
+                            <label class="form-check-label" for="flexCheckDefault3">
+                            Greater than three &#9733;'s
+                            </label> <br>               
+                            <input class="form-check-input" type="radio" value=2 id="flexCheckDefault2" name = "rating">
+                            <label class="form-check-label" for="flexCheckDefault2">
+                            Greater than two &#9733;'s
+                            </label> <br>               
+                    </div>
+                </div>
+                <div class="col-2 text-center">
+                    <label for="facilities"><a href="#" class = "link-dark" data-bs-toggle="collapse" data-bs-target="#facilities" aria-expanded="false" aria-controls="collapseExample">Facility</a></label>        
+                    <div class = "form-check collapse" id = "facilities">
+                        <% for(let i=0;i<facilityTypes.length;i++){ %>
+                            <input class="form-check-input" type="checkbox" value="<%=facilityTypes[i]%>" id="flexCheckDefault<%=i%>" name = "facilityType" 
+                                <%if(typeof facilityFilter!== 'undefined'){%>
+                                    <%if(facilityFilter.indexOf(facilityTypes[i])!==-1){%>
+                                        checked
+                                    <%}%>
+                                <%}%>
+                            >
+                            <label class="form-check-label" for="flexCheckDefault<%=i%>">
+                                <%=facilityTypes[i]%>
+                            </label> <br>
+                        <% } %>
+                    </div>
+                </div>                
+                <div class="col-2 text-center">
+                    <label for="publicOrPrivate"><a href="#" class = "link-dark"" data-bs-toggle="collapse" data-bs-target="#public" aria-expanded="false" aria-controls="collapseExample">Type</a></label>        
+                    <div class = "form-check collapse" id = "public">                        
+                        <input class="form-check-input" type="radio" value="public" id="flexCheckDefault1" name = "publicOrPrivate" >
+                        <label class="form-check-label" for="flexCheckDefault1">
+                            Public
+                        </label> <br>
+                        <input class="form-check-input" type="radio" value="private" id="flexCheckDefault2" name = "publicOrPrivate" >
+                        <label class="form-check-label" for="flexCheckDefault2">
+                            Private
+                        </label> <br>
+                    </div>
+                </div>                
+                <div class="col-2 text-center">
+                    <label for="price"><a href="#" class = "link-dark" data-bs-toggle="collapse" data-bs-target="#price" aria-expanded="false" aria-controls="collapseExample">Cost</a></label>        
+                    <div class = "form-check collapse" id = "price">                        
+                        <input class="form-check-input" type="radio" value="0" id="flexCheckDefault1" name = "price" >
+                        <label class="form-check-label" for="flexCheckDefault1">
+                            Free
+                        </label> <br>
+                        <input class="form-check-input" type="radio" value="0" id="flexCheckDefault1" name = "price" >
+                        <label class="form-check-label" for="flexCheckDefault1">
+                            less than $1
+                        </label> <br>
+                        <input class="form-check-input" type="radio" value="1" id="flexCheckDefault1" name = "price" >
+                        <label class="form-check-label" for="flexCheckDefault1">
+                            less than $2
+                        </label> <br>
+                        <input class="form-check-input" type="radio" value="1" id="flexCheckDefault1" name = "price" >
+                        <label class="form-check-label" for="flexCheckDefault1">
+                            less than $5
+                        </label> <br>
+                        <input class="form-check-input" type="radio" value="1" id="flexCheckDefault1" name = "price" >
+                        <label class="form-check-label" for="flexCheckDefault1">
+                            less than $10
+                        </label> <br>
+
+                    </div>
+                </div>                
+            </div>
+            
+        </div>
+        <div class="col-1"><button class="btn btn-secondary mb-3">Apply</a></div>
+    </div>
+</form>
 <!-- <a href="/bathrooms/new">New</a> -->
     <% for (let i of bathrooms){%>
         <div class = "card mb-4 shadow">
@@ -13,16 +135,26 @@
                         <img  alt="" class = "img-fluid" src="https://source.unsplash.com/random/?toilet/480x480">
                     <%}%>
                 </div>
-                <div class="col-md-8">
-                    <div class="card-body">
+                <div class="col-md-7">
+                    <div class="card-body mb-5">
                         <h5 class="card-title"><%= i.name %> </h5>
                         <p class="card-text"><%= i.description %> </p>
                         <p class="card-text">
                             <small class = "text-muted"><%= i.address %> </small>
                         </p>
-                        <a class="btn btn-secondary" href="/bathrooms/<%=i._id%> ">View</a>
-                    </div>
+                        
+                    </div>         
+                    <% if (i.reviews.length!=0){%>           
+                        <% let average = 0 %>
+                        <% for (let j of i.reviews){ %>                                       
+                         <% average = average + j.rating %>               
+                        <% } %> 
+                        <p class="starability-result" data-rating=<%=Math.round((average/i.reviews.length))%>  >
+                        Rated: <%(average/i.reviews.length).toFixed(1)%>  stars
+                        <p><i><%=i.reviews.length%> Review<%if(i.reviews.length>1){%>s<% } %></i></p>
+                    <% } %> 
                 </div>
+                <div class="col-1 position-absolute bottom-0 end-0 pb-3"><a class="btn btn-secondary" href="/bathrooms/<%=i._id%> ">View</a></div>
             </div>
         </div>
     <% } %> 

@@ -4,14 +4,18 @@
 
 const Bathroom = require('../models/bathroomModel.js'); // this is getting the product model we exported from the model.js file. If this seeds.js file is in a sub folder, you'll need to navigate back by adding .. to the start of the address like this: require('../models/models.js');
 const mongoose = require('mongoose') ;
-const {name, facilityType, address} = require('./publicToiletsList.js');// here, we're importing our initial data that we'll seed into the db
+const {name, facilityType, address, description, services} = require('./publicToiletsList.js');// here, we're importing our initial data that we'll seed into the db
 const {seedImage} = require('./seedImages.js')
 
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 const mapBoxToken = "pk.eyJ1Ijoic2NvdHRzdGluc29uIiwiYSI6ImNsMXc5M21maDA2aHIzbG85bjl0N3JlMWoifQ.3QrGDM_FGwDCCECU8zg7IA";
 const geocoder = mbxGeocoding({accessToken: mapBoxToken});
 
-mongoose.connect('mongodb://localhost:27017/wheres-the-bathoom-DB', {useNewUrlParser: true, useUnifiedTopology: true}) 
+//const dbUrl = 'mongodb://localhost:27017/wheres-the-bathoom-DB' // used for local development
+//const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/wheres-the-bathoom-DB'
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/wheres-the-bathoom-DB'
+
+mongoose.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true}) 
     .then(function(){
         console.log("Mongo Connection Open") // we can test this the same way we test the listrning, with nodemon in the terminal
     })
@@ -23,11 +27,11 @@ mongoose.connect('mongodb://localhost:27017/wheres-the-bathoom-DB', {useNewUrlPa
 // -------- DATA ENTRY --------
 
 // here, we'll take data from the publicToiletsList.js file and put it into our DB.
-// Let's start with the first 50 sites
+// Let's start with the first 1000 sites
 
 const seedDB = async function (){
     await Bathroom.deleteMany({});
-    for (let i = 0; i <500; i++){
+    for (let i = 0; i <100; i++){
         let randomNumber1 = Math.floor((Math.random()*(seedImage.length))+0);
         let randomNumber2 = Math.floor((Math.random()*(seedImage.length))+0);
         let randomNumber3 = Math.floor((Math.random()*(seedImage.length))+0);
@@ -45,7 +49,8 @@ const seedDB = async function (){
                 type:geoData.body.features[0].geometry.type,
                 coordinates:geoData.body.features[0].geometry.coordinates
             },
-            author:'624c83ff53764dec67c0368f',
+            private: 'public',
+            author:'62615149383bb936ac259d48',//'624c83ff53764dec67c0368f', // the second value is the vicgov acccout used to seed our development db, and the first is the vicgov account we'll use to seed or production db
             facilityType:facilityType[i],
             images: [
                 {
@@ -61,7 +66,8 @@ const seedDB = async function (){
                     filename: seedImage[randomNumber3].filename
                 }
             ],
-            description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique illo, fugiat et ipsum consequatur quas unde labore minima nesciunt magnam veniam corrupti ullam quia, illum recusandae! Quo modi fugit animi!"
+            description: description[i],
+            services: services[i]
         });
         b.save().then(b=>{
             console.log(b)

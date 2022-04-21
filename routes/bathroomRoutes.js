@@ -24,6 +24,8 @@ const extraValidatationBathroom = function(req,res,next){ // This will be used a
             address: Joi.string().required().escapeHTML(),
             image: Joi.string().escapeHTML(),
             description: Joi.string().escapeHTML(),
+            facilityType: Joi.string().escapeHTML(),
+            services: Joi.array(),
             price: Joi.number()//.escapeHTML()//.required()//.min(0) // (note, we can only add escapeHTML to strings)
         }).required(),
         deleteImages:Joi.array() // this will be used to select images to delte on our edit form. Images with marked with the checkbox with the name deleteImages[] will be deleted
@@ -40,15 +42,43 @@ const extraValidatationBathroom = function(req,res,next){ // This will be used a
 
 // ---------- DISPLAY ALL BATHROOMS ------//
 
+const facilityTypes = ['Airport','Beach','Bus station','Camping ground','Car park','Caravan park','Cemetery','Community building','Food outlet','Gym','Jetty','Other','Park or reserve','Rest area', 'Resturtant, bar or cafe','Service station','Shopping centre','Sporting facility','Swimming pool','Train station'];
+const services = ['Free On-site Parking', 'Adult Changerooms','Showers','Baby Change Facilities','Baby Care Room','Unisex','Disabled Bathrooms','Drinking Water','Sharps Disposal','Key Required']
+
 router.get('/', wrapAsyncErrorCatcher(async function(req,res){
-    const bathrooms = await Bathroom.find({});
-    res.render('bathrooms.ejs', {bathrooms});
+    const bathrooms = await Bathroom.find({}).populate({path:"reviews", populate:{path:"author"}}).populate("author"); // here, we're populating the author of the bathroom, however, the author of the review may be different to the author of the bathroom, so we have to do this nested populate with paths to get both the euthor and bathroom populated;
+    res.render('bathrooms.ejs', {bathrooms, services, facilityTypes});
 }));
+
+router.post('/filter', wrapAsyncErrorCatcher(async function(req,res){
+    const serviceFilter = req.body.services;
+    const facilityFilter = req.body.facilityType;
+    const ratingFilter = req.body.rating;
+    //serviceFilter.push(req.body.services);
+    let bathrooms = await Bathroom.find({});
+    if(serviceFilter!=undefined && facilityFilter!=undefined){
+        bathrooms = await Bathroom.find({$and:[{services: {$in:serviceFilter}},{facilityType:{$in:facilityFilter}}]})
+    } else if (serviceFilter!=undefined && facilityFilter==undefined){
+        bathrooms = await Bathroom.find({services: {$in:serviceFilter}})
+    } else if (serviceFilter==undefined && facilityFilter!=undefined){
+        bathrooms = await Bathroom.find({facilityType: {$in:facilityFilter}})
+    } 
+    // for (let i = 0; i < bathrooms.length; i++){ // attempting to add review filter
+    //     for (let j = 0; j < bathrooms[i].reviews.length;j++){
+    //         console.log(bathrooms[i])
+    //         console.log(bathrooms[i].reviews[j])
+    //         const reviewId = bathrooms[i].reviews[j].toString() // .toString() converts "New Objectid()"" to the raw id  
+    //     }
+    // } 
+    res.render('bathrooms.ejs', {bathrooms, services, facilityTypes,serviceFilter, facilityFilter,ratingFilter})
+    //res.redirect('/bathrooms');
+}));
+
 
 // ---------- CREATE NEW BATHROOM ------ //
 
 router.get('/new', isLoggedIn, function(req,res){
-    res.render('new.ejs');
+    res.render('new.ejs',{facilityTypes, services});
 });
 
 router.post('/', isLoggedIn,  upload.array('image'), extraValidatationBathroom, wrapAsyncErrorCatcher(async function(req,res,next){ // we're proctect the psot route with isloggedin, even though the get router is already proctected, incase the client uses postman to skip the getroute and post something without being logged in. NOTE: we should validate before we uploadnthe images, but that's not working, so we need to come up with a solution
@@ -117,6 +147,13 @@ router.put ('/:id', isLoggedIn, isAuthor, upload.array('image'), extraValidatati
 router.delete ('/:id', isLoggedIn, isAuthor, wrapAsyncErrorCatcher(async function(req,res){
     //res.send("IT WORKED")
     const { id } = req.params;
+    const bathroom = await Bathroom.findById(id);
+    console.log(bathroom.images)
+    if(bathroom.images){
+        for(i of bathroom.images){
+            await cloudinary.uploader.destroy(i.filename) // deleting from cloudinaru
+        }
+    }
     await Bathroom.findByIdAndDelete(id); 
     req.flash('remove','Bathroom deleted')
     res.redirect("/bathrooms")

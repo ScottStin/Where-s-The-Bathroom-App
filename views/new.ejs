@@ -4,26 +4,71 @@
     <h1 class = "text-center">New Bathroom</h1>
     <div class = "col-md-6 offset-md-3">
         <form action="/bathrooms" method = "POST" novalidate class="needs-validation" enctype="multipart/form-data"> <!-- Novalidate is important for our error handling with required below. The 'needs-validation' class is what we select if the form is validated'. See boiler plate for more code related to this.-->
-            <div class = "mb-3">
-                <label class="form-label" for="name">Name</label>
+            <div class = "mb-4">
+                <label class="form-label" for="name"><h6>Name</h6></label>
                 <Input class="form-control" type = "text" id="name" name="bathroom[name]" required> <!-- required is important for our error handling-->
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div>
-            <div class = "mb-3">
-                <label class="form-label" for="address">Address</label>
+            <div class = "mb-4">
+                <label class="form-label" for="address"><h6>Address</h6></label>
                 <Input class="form-control"  type = "text" id="name" name="bathroom[address]" required>
                 <div class="valid-feedback">
                     Looks good!
                 </div>
             </div>
-            <div class = "mb-3">
-                <label class="form-label" for="description">Description</label>
+            <div class = "mb-4">
+                <label class="form-label" for="description"><h6>Description</h6></label>
                 <textarea class="form-control"  type = "text" id="name" name="bathroom[description]"></textarea>
             </div>
-            <div class = "mb-3">
-                <label class="form-label" for="price">Price</label>
+            <div class="mb-4">
+                <label class="form-label" for="type"><h6>Type of Bathroom</h6></label>
+                <select class="form-select" aria-label="Default select example" id="type" name="bathroom[facilityType]">
+                    <option selected value ="Other">Select Bathroom Type</option>
+                    <% for(let i=0;i<facilityTypes.length;i++){ %>
+                        <option value="<%=facilityTypes[i]%>"><%=facilityTypes[i]%></option> <!--Here, it is very important that the 'value' match our mongoose schema model--> 
+                    <% } %> 
+                </select>
+            </div>          
+            <div class = "mb-4">      
+                <label for="services"><h6>What services does this bathroom offer?</h6></label>        
+                <div class = "form-check" id = "services">
+                    <% for(let i=0;i<services.length;i++){ %>
+                        <input class="form-check-input" type="checkbox" value="<%=services[i]%>" id="flexCheckDefault<%=i%>" name = "bathroom[services]">
+                        <label class="form-check-label" for="flexCheckDefault<%=i%>">
+                            <%=services[i]%>
+                        </label> <br>
+                    <% } %>
+                </div>
+            </div>
+            <% const times = ["12:00 am", "1:00 am", "2:00 am", "3:00 am", "4:00 am", "5:00 am","6:00 am","7:00 am","8:00 am", "9:00 am", "10:00 am", "11:00 am", "12:00 pm", "1:00 pm", "2:00 pm", "3:00 pm", "4:00 pm","5:00 pm","6:00 pm","7:00 pm", "8:00 pm", "9:00 pm", "10:00 pm","11:00 pm"] %> 
+            <% const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %> 
+            <div class = "mb-4">
+                <h6>Opening Hours</h6>
+                <% for (d of days) {%>
+                    <div class = "row"> 
+                        <div class="col-6">
+                            <select class="form-select mb-3" aria-label="Default select example">
+                                <option selected><%=d%> Opening Time</option>
+                                <% for (t of times){%>
+                                    <option value="<%=t%>"><%=t%></option>
+                                <%} %>                       
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <select class="form-select mb-3" aria-label="Default select example">
+                                <option selected><%=d%> Closing Time</option>
+                                <% for (t of times){%>
+                                    <option value="<%=t%>" name = "bathroom[openingHours]"><%=t%></option>
+                                <%} %>                       
+                            </select>                   
+                        </div>
+                    </div>
+                <% } %>           
+            </div>
+            <div class = "mb-4">
+                <label class="form-label" for="price"><h6>Price</h6></label>
                 <div class="input-group">
                     <span class="input-group-text" id = "price-label">$</span>
                     <input type="text" class="form-control" id = "price" placeholder = "0" aria-label="Amount (to the nearest dollar)" name="bathroom[price]">
@@ -32,7 +77,7 @@
             </div>    
              <!-- <input type="file" name="image" id="image" multiple> -->
             <div class="mb-3">
-                <label for="formFileMultiple" class="form-label">Select Image(s) to Upload</label>
+                <label for="formFileMultiple" class="form-label"><h6>Select Image(s) to Upload</h6></label>
                 <input class="form-control" type="file" id="image" name = "image" multiple>
             </div>
             <!-- <div class = "mb-3">

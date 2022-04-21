@@ -32,7 +32,12 @@ const BathroomSchema = new mongoose.Schema({
         required:true
     },
     facilityType:{
-        type:String
+        type:String,
+        enum:['Airport','Beach','Bus station','Camping ground','Car park','Caravan park','Cemetery','Community building','Food outlet','Jetty','Other','Park or reserve','Rest area','Service station','Shopping centre','Sporting facility','Swimming pool','Train station','Resturtant, bar or cafe','Gym']
+    },
+    services:{
+        type: Array,
+        //emum:['Free On-site Parking', 'Adult Changerooms','Showers','Baby Change Facilities','Baby Care Room','Unisex','Disabled Bathrooms','Drinking Water','Sharps Disposal','Key Required']
     },
     description:{
         type:String,

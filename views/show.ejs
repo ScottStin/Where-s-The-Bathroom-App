@@ -31,6 +31,7 @@
         <li class="list-group-item text-muted"><%=bathrooms.address%></li>
         <li class="list-group-item">Owner: <%=bathrooms.author.username%></li>
         <li class="list-group-item">Type: <%= bathrooms.facilityType%></li>
+        <li class="list-group-item">Services: <%=bathrooms.services.join(' | ')%> </li>
         <li class="list-group-item<% if (bathrooms.price = 0){ %> text-muted <% } %>">Price: <%=bathrooms.price%></li>
       </ul>
       <div class="card-body">
@@ -54,7 +55,7 @@
           break;
         }
       }
-      if (found === false){%> 
+      if (found === false && currentUser._id !=bathrooms.author.id){%> 
         <h2>Review This Loo:</h2>
         <form action="/bathrooms/<%=bathrooms._id%>/reviews" method = "POST" class = "mb-3 needs-validation" novalidate>
           <div class = "mb-3">

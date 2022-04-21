@@ -57,8 +57,8 @@ if(process.env.NODE_ENV !=="production"){ // before we launch our app, we will w
 }
 
 //const dbUrl = process.env.DB_URL; // used for production. Note - this DB_URL, which is saved in our .env file, is generate by mongo cloud atlas under 'connect_>connect your application' on our cloud.nongodb dashboard
-const dbUrl = 'mongodb://localhost:27017/wheres-the-bathoom-DB' // used for local development
-//const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/wheres-the-bathoom-DB'
+//const dbUrl = 'mongodb://localhost:27017/wheres-the-bathoom-DB' // used for local development
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/wheres-the-bathoom-DB'
 
 // save in .ev file: mongodb+srv://<username>:<password>@cluster0.eaato.mongodb.net/myFirstDatabase?retryWrites=true&w=majority // we'll be using a mongo service called 'atlas' for our production database - which is a global cloud service. However, there are other services, like AWS, that we could use instead.
 // for information on how to set this up see: https://www.udemy.com/course/the-web-developer-bootcamp/learn/lecture/22361202#questions/13782892
@@ -67,7 +67,7 @@ const dbUrl = 'mongodb://localhost:27017/wheres-the-bathoom-DB' // used for loca
 // login by typing 'heroku login' in our command line, then press any key then log in through the browser/
 // make sure the dbURL being used isthe DB_URL in the .env folder. Also do the same with secretKey.
 // in the heroku dashboard, vreate a new app and give it a name e.g "my-app-name"
-// When ready to launch, navigate to prject folder in github and run (note: anytime we make changes to our app, we need to do this again from git add):
+// When ready to launch, navigate to prject folder in github and run (note: anytime we make changes to our app, we need to do this again from git remote):
     // heroku create // you should see a name of the app appear (random weird name). Copy and paste the URL into your browser. Alternatively, use the app name you've created in heroku. You made need to use control c to escape after loggin in
     // heroku git:remote - my-app-name
     // git remote -v
