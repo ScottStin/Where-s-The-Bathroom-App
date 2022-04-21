@@ -64,10 +64,11 @@ const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/wheres-the-bathoo
 // for information on how to set this up see: https://www.udemy.com/course/the-web-developer-bootcamp/learn/lecture/22361202#questions/13782892
 
 // install Heroku CLI on computer (if haven't done so already): https://devcenter.heroku.com/articles/heroku-cli#install-the-heroku-cli // this will be used to launch our app.
+// git init
 // login by typing 'heroku login' in our command line, then press any key then log in through the browser/
 // make sure the dbURL being used is the DB_URL in the .env folder. Also do the same with secretKey.
 // in the heroku dashboard, vreate a new app and give it a name e.g "my-app-name"
-// When ready to launch, navigate to prject folder in github and run (note: anytime we make changes to our app, we need to do this again from git remote):
+// When ready to launch, navigate to prject folder in github and run (note: anytime we make changes to our app, we need to do this again from git commit then heroku login (add git:remote if you've used a different git respository recently)):
     // heroku create // you should see a name of the app appear (random weird name). Copy and paste the URL into your browser. Alternatively, use the app name you've created in heroku. You made need to use control c to escape after loggin in
     // heroku git:remote - my-app-name
     // git remote -v
